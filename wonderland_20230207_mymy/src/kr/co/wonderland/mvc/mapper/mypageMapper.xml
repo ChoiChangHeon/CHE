@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mypage">
+	<!-- 내 가입 정보 : myloginlog 테이블을 통해서 이번달 전달받을 sid를 통해 login 기록을 카운트해서 이번 달 
+		출석을 얼마나 했는지 count (distinct substr(sstime,0,8)) : 중복값을 제거한 년/월 (23/01)을 통해 
+		오늘 날짜와 비교 -->
+	<select id="info" parameterType="String" resultType="studentDTO">
+		select
+		sname, sid, semail, regdate, count(distinct substr(sstime,0,8)) cnt
+		from student, myloginlog
+		where idn = sid and sid = #{sid} and
+		substr(sstime, 0, 5) = substr(sysdate,
+		0, 5)
+		group by sname, sid,
+		semail, regdate
+	</select>
+
+
+	<select id="lectureinfo" parameterType="String" resultType="lecturesDTO">
+		select ls.lsnum, ls.tcode, ls.lstitle, ls.lsinfo, ls.lsdiff, count(l.lnum)
+		cnt from enrolment e,lectures ls,lecture l where scode=(select snum
+		from student where sid=#{sid}) and ls.lsnum=e.lscode(+) and
+		ls.lsnum=l.lscode(+) and sysdate between startdate and
+		add_months(startdate, 3) group by ls.lsnum, ls.tcode, ls.lstitle,
+		ls.lsinfo, ls.lsdiff
+	</select>
+	
+	<select id="lectureinfonot" parameterType="String" resultType="lecturesDTO">
+	select ls.lsnum, ls.tcode, ls.lstitle, ls.lsinfo, ls.lsdiff, count(l.lnum)
+		cnt from enrolment e,lectures ls,lecture l where scode=(select snum
+		from student where sid=#{sid}) and ls.lsnum=e.lscode(+) and
+		ls.lsnum=l.lscode(+) and sysdate not between startdate and
+		add_months(startdate, 3) group by ls.lsnum, ls.tcode, ls.lstitle,
+		ls.lsinfo, ls.lsdiff
+	</select>
+
+</mapper>

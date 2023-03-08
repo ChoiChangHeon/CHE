@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+ 		<typeAlias type="kr.co.wonderland.mvc.dto.StudentDTO" alias="stddto"/>
+ 		<typeAlias type="kr.co.wonderland.mvc.dto.MyLoginLoggerDTO" alias="ldto"/>
+ 		<typeAlias type="kr.co.wonderland.mvc.dto.NoticeDTO" alias="ndto"/>
+ 		
+ 		<typeAlias type="kr.co.wonderland.mvc.dto.GogekDTO" alias="gdto"/>
+ 		<typeAlias type="kr.co.wonderland.mvc.dto.GogekCommDTO" alias="gcdto"/>
+
+		<typeAlias type="kr.co.wonderland.mvc.dto.StudyDTO" alias="sdto"/>
+		<typeAlias type="kr.co.wonderland.mvc.dto.StudyCommDTO" alias="scdto"/>
+		<typeAlias type="kr.co.wonderland.mvc.dto.KeywordDTO" alias="kdto"/>
+		
+		<typeAlias type="kr.co.wonderland.mvc.dto.TeacherDTO" alias="tdto"/>
+		<typeAlias type="kr.co.wonderland.mvc.dto.LectureDTO" alias="ltdto"/>
+
+		<typeAlias type="kr.co.wonderland.mvc.dto.EnrolmentDTO" alias="edto"/>
+		<typeAlias type="kr.co.wonderland.mvc.dto.TeacherQuestionDTO" alias="tqdto"/>
+		<typeAlias type="kr.co.wonderland.mvc.dto.TeacherAnswerDTO" alias="tadto"/>
+		<typeAlias type="kr.co.wonderland.mvc.dto.CategoryDTO" alias="cdto"/>
+	</typeAliases>
+</configuration>

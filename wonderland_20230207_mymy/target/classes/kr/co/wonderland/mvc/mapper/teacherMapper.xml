@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="teacher">
+	<!-- 선생님 등록 -->
+	<insert id="add" parameterType="teacherDTO">
+		insert into teacher
+		values(teacher_seq.nextVal, #{tid}, #{tname}, #{tinfo}, #{temail},
+		#{tpwd}, #{tbday}, #{timgn}, sysdate)
+	</insert>
+
+	<!-- 선생님 리스트 -->
+	<select id="list" resultType="teacherDTO">
+		select subject,tname,timgn,tnum
+		from teacher,(select distinct subject,tcode from lectures,category where
+		ccode=cnum) where tnum=tcode
+	</select>
+
+	<!-- 선생님 등록 시 아이디, 비밀번호 체크 -->
+	<select id="tidChk" parameterType="String" resultType="int">
+		select
+		count(*) from teacher where tid = #{tid}
+	</select>
+	<select id="temailChk" parameterType="String" resultType="int">
+		select
+		count(*) from teacher where temail = #{temail}
+	</select>
+
+	<!-- 선생님 디테일 페이지 -->
+
+
+	<resultMap type="teacherDTO" id="detailResultMap">
+		<id property="tnum" column="tnum" />
+		<result property="tinfo" column="tinfo" />
+		<result property="tname" column="tname" />
+		<result property="timgn" column="timgn" />
+		<result property="subject" column="subject" />
+		<collection property="lectures" ofType="lecturesDTO"
+			javaType="java.util.List">
+			<id property="lsnum" column="lsnum" />
+			<result property="lstitle" column="lstitle" />
+			<result property="lsinfo" column="lsinfo" />
+			<result property="lsdiff" column="lsdiff" />
+			<result property="runtime" column="runtime" />
+			<result property="cnt" column="cnt" />
+		</collection>
+	</resultMap>
+
+	<select id="detail" parameterType="int"
+		resultMap="detailResultMap">
+		select
+		tnum,tinfo,tname,timgn,subject,lsnum,lstitle,lsinfo,lsdiff,runtime,cnt
+		from
+		teacher,
+		(select lsinfo,lstitle,lsdiff,subject,lsnum, sum(lruntime)
+		runtime,
+		count(lnum) cnt , tcode from lecture,
+		(select * from
+		lectures,category where ccode=cnum) where lsnum = lscode group
+		by
+		lsnum,tcode,subject,lstitle,lsinfo,lsdiff) where tnum=tcode and
+		tnum=#{tnum}
+	</select>
+
+	<resultMap type="teacherDTO" id="detailResultMap2">
+		<id property="tnum" column="tnum" />
+		<collection property="lectures" javaType="java.util.List"
+			ofType="lecturesDTO">
+			<id property="lsnum" column="lsnum" />
+			<collection property="lecturesReview"
+				javaType="java.util.List" ofType="lecturesrDTO">
+				<id property="lscode" column="lscode" />
+				<result property="lrwriter" column="lrwriter" />
+				<result property="lrcontent" column="lrcontent" />
+				<result property="lrstar" column="lrstar" />
+				<result property="lrdate" column="lrdate" />
+			</collection>
+		</collection>
+	</resultMap>
+	<select id="detail2" parameterType="int"
+		resultMap="detailResultMap2">
+		select lscode,lrwriter,lrcontent,lrstar,lrdate from
+		teacher,(select * from lectures,lectures_review where lsnum=lscode)
+		where tnum=tcode and
+		tnum=#{tnum}
+	</select>
+
+	<select id="detail3" parameterType="int"
+		resultType="teacherqDTO">
+		select * from teacher_question where tcode=#{tnum}
+	</select>
+</mapper>

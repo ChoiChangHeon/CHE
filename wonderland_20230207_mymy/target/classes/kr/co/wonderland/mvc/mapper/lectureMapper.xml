@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lecture">
+	<insert id="add" parameterType="ltdto">
+		insert into lecture
+		values(lecture_seq.nextVal, #{tcode}, 1, #{ltitle}, #{lstitle}, #{linfo}, #{lruntime})
+	</insert>
+
+	<!-- Teacher ResultMap -->
+	<resultMap type="tdto" id="listResultMap">
+		<id property="tnum" column="tnum" javaType="int" />
+		<result property="tname" column="tname"/>
+		<collection property="lecture" javaType="java.util.List" ofType="ltdto">
+			<id property="lnum" column="lnum" javaType="int"/>
+			<result property="ltitle" column="ltitle"/>
+			<result property="lstitle" column="lstitle"/>
+			<result property="lruntime" column="lruntime" javaType="int"/>
+		</collection>
+	</resultMap>
+	<select id="list" resultMap="listResultMap">
+		select l.lnum, l.ltitle, l.lstitle, t.tnum, t.tname, l.lruntime
+		from lecture l, teacher t
+		where t.tnum = l.tcode
+		order by 1 desc
+	</select>
+
+	<resultMap type="tdto" id="detailResultMap">
+		<id property="tnum" column="tnum" javaType="int" />
+		<result property="tname" column="tname"/>
+		<collection property="lecture" javaType="java.util.List" ofType="ltdto">
+			<id property="lnum" column="lnum" javaType="int"/>
+			<result property="ltitle" column="ltitle"/>
+			<result property="lstitle" column="lstitle"/>
+			<result property="lruntime" column="lruntime" javaType="int"/>
+			<result property="linfo" column="linfo"/>
+		</collection>
+	</resultMap>
+	<select id="detail" parameterType="int" resultMap="detailResultMap">
+		select t.tnum, t.tname, l.lnum, l.ltitle, l.lstitle, l.lruntime, l.linfo
+		from lecture l, teacher t
+		where t.tnum = l.tcode and l.lnum = #{lnum}
+	</select>
+</mapper>
